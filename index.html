@@ -893,25 +893,47 @@ function vortyxAIToggle(){
   panel.style.display=panel.style.display==='block'?'none':'block';
 }
 
-function vortyxAISend(){
-  const input=document.getElementById('vortyx-ai-input');
-  const messages=document.getElementById('vortyx-ai-messages');
-  const value=input.value.trim();
-  if(!value)return;
 
-  const message=document.createElement('div');
-  message.className='vx-ai-message';
-  message.textContent=value;
-  messages.appendChild(message);
+async function vortyxAISend() {
+  const input = document.getElementById('vortyx-ai-input');
+  const messages = document.getElementById('vortyx-ai-messages');
 
-  const reply=document.createElement('div');
-  reply.className='vx-ai-message';
-  reply.textContent='Mesaj primit! Conectarea motorului AI va fi activată în etapa următoare.';
-  messages.appendChild(reply);
+  const value = input.value.trim();
+  if (!value) return;
 
-  input.value='';
-  messages.scrollTop=messages.scrollHeight;
+  // Afisam mesajul utilizatorului
+  const userMessage = document.createElement('div');
+  userMessage.className = 'vx-ai-message';
+  userMessage.textContent = value;
+  messages.appendChild(userMessage);
+
+  input.value = '';
+  input.disabled = true;
+
+  // Indicator de asteptare
+  const loading = document.createElement('div');
+  loading.className = 'vx-ai-message';
+  loading.textContent = 'VORTYX AI scrie...';
+  messages.appendChild(loading);
+
+  messages.scrollTop = messages.scrollHeight;
+
+  try {
+    const result = await vortyxAskAI(value);
+
+    loading.textContent = result.reply || result.error || 'Nu am primit un răspuns.';
+
+  } catch (error) {
+    console.error('VORTYX AI:', error);
+    loading.textContent = 'VORTYX AI momentan indisponibil.';
+  }
+
+  input.disabled = false;
+  input.focus();
+  messages.scrollTop = messages.scrollHeight;
 }
+
+
 </script>
 <!-- END VORTYX AI -->
 <!-- VORTYX AI CONNECTION -->
