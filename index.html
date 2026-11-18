@@ -1129,22 +1129,28 @@ VORTYX AI STUDIO INITIALIZED
 
 <script>
 
+
 async function vxPrepare(type) {
   const status = document.getElementById("vx-studio-status");
+  const resultBox = document.getElementById("vx-video-result");
+  const video = document.getElementById("vx-generated-video");
+  const download = document.getElementById("vx-video-download");
 
-  const promptIds = {
-    text: "vx-text-prompt",
-    image: "vx-image-prompt"
-  };
-
-  const prompt = document.getElementById(promptIds[type]);
-
-  if (!prompt || !prompt.value.trim()) {
-    status.textContent = "Please enter your request first.";
+  if (type !== "text") {
+    status.textContent =
+      "Image animation will be connected in the next stage.";
     return;
   }
 
-  status.textContent = "VORTYX AI is processing your request...";
+  const prompt = document.getElementById("vx-text-prompt");
+
+  if (!prompt || !prompt.value.trim()) {
+    status.textContent = "Please enter your video description.";
+    return;
+  }
+
+  status.textContent = "VORTYX AI: Starting video generation...";
+  resultBox.style.display = "none";
 
   try {
     const response = await fetch(
@@ -1155,7 +1161,8 @@ async function vxPrepare(type) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          message: prompt.value.trim()
+          action: "video_create",
+          prompt: prompt.value.trim()
         })
       }
     );
@@ -1163,16 +1170,79 @@ async function vxPrepare(type) {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || "AI request failed");
+      throw new Error(
+        data.details?.detail ||
+        data.error ||
+        "Video generation failed"
+      );
     }
 
-    status.textContent = data.reply || "No response received.";
+    if (!data.video_id) {
+      throw new Error("Video ID was not returned by Agnes AI.");
+    }
+
+    status.textContent = "VORTYX AI: Video is generating...";
+
+    let completed = false;
+
+    for (let i = 0; i < 90; i++) {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const check = await fetch(
+        "https://vortyx-ai-engine-2026.aquarium-reef12.workers.dev",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            action: "video_status",
+            video_id: data.video_id
+          })
+        }
+      );
+
+      const progress = await check.json();
+
+      if (!check.ok) {
+        throw new Error(
+          progress.error || "Could not check video status."
+        );
+      }
+
+      status.textContent =
+        "VORTYX AI: " +
+        (progress.progress ?? 0) +
+        "% – " +
+        (progress.status || "processing");
+
+      if (progress.status === "completed" && progress.url) {
+        video.src = progress.url;
+        download.href = progress.url;
+        resultBox.style.display = "block";
+        status.textContent = "VORTYX AI: Video ready!";
+        completed = true;
+        break;
+      }
+
+      if (progress.status === "failed") {
+        throw new Error(
+          progress.error?.message || "Video generation failed."
+        );
+      }
+    }
+
+    if (!completed) {
+      status.textContent =
+        "Generation is taking longer. Please try again later.";
+    }
 
   } catch (error) {
-    console.error("VORTYX AI:", error);
-    status.textContent = "Connection error. Please try again.";
+    console.error("VORTYX VIDEO:", error);
+    status.textContent = "Video error: " + error.message;
   }
 }
+
 
 
 
