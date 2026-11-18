@@ -1114,14 +1114,20 @@ VORTYX AI STUDIO INITIALIZED
 
 async function vxPrepare(type) {
   const status = document.getElementById("vx-studio-status");
-  const prompt = document.getElementById("vx-content-prompt");
+
+  const promptIds = {
+    text: "vx-text-prompt",
+    image: "vx-image-prompt"
+  };
+
+  const prompt = document.getElementById(promptIds[type]);
 
   if (!prompt || !prompt.value.trim()) {
     status.textContent = "Please enter your request first.";
     return;
   }
 
-  status.textContent = "VORTYX AI is thinking...";
+  status.textContent = "VORTYX AI is processing your request...";
 
   try {
     const response = await fetch(
@@ -1150,6 +1156,7 @@ async function vxPrepare(type) {
     status.textContent = "Connection error. Please try again.";
   }
 }
+
 
 
 </script>
