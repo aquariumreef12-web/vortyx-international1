@@ -914,7 +914,35 @@ function vortyxAISend(){
 }
 </script>
 <!-- END VORTYX AI -->
+<!-- VORTYX AI CONNECTION -->
+<script>
+const VORTYX_AI_API = "https://vortyx-ai-engine-2026.aquarium-reef12.workers.dev";
 
+async function vortyxAskAI(message) {
+  try {
+    const response = await fetch(VORTYX_AI_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: message
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error("AI connection error");
+    }
+
+    return await response.json();
+
+  } catch (error) {
+    console.error("VORTYX AI:", error);
+    return { error: "VORTYX AI momentan indisponibil." };
+  }
+}
+</script>
+<!-- END VORTYX AI CONNECTION -->
 </body>
 </html>
 
