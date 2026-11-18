@@ -1089,14 +1089,46 @@ VORTYX AI STUDIO INITIALIZED
 </section>
 
 <script>
-function vxPrepare(type) {
-  const status = document.getElementById(
-    "vx-studio-status"
-  );
 
-  status.textContent =
-    "Project prepared: " + type.toUpperCase() +
-    ". AI engine integration pending.";
+async function vxPrepare(type) {
+  const status = document.getElementById("vx-studio-status");
+  const prompt = document.getElementById("vx-content-prompt");
+
+  if (!prompt || !prompt.value.trim()) {
+    status.textContent = "Please enter your request first.";
+    return;
+  }
+
+  status.textContent = "VORTYX AI is thinking...";
+
+  try {
+    const response = await fetch(
+      "https://vortyx-ai-engine-2026.aquarium-reef12.workers.dev",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: prompt.value.trim()
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "AI request failed");
+    }
+
+    status.textContent = data.reply || "No response received.";
+
+  } catch (error) {
+    console.error("VORTYX AI:", error);
+    status.textContent = "Connection error. Please try again.";
+  }
+}
+
 }
 </script>
 <!-- END VORTYX AI CREATIVE STUDIO -->
