@@ -943,6 +943,164 @@ async function vortyxAskAI(message) {
 }
 </script>
 <!-- END VORTYX AI CONNECTION -->
+
+<!-- VORTYX AI CREATIVE STUDIO -->
+<style>
+#vortyx-studio {
+  background: #090711;
+  color: white;
+  padding: 65px 20px;
+  font-family: Arial, sans-serif;
+}
+#vortyx-studio .vx-wrap {
+  max-width: 1100px;
+  margin: auto;
+}
+#vortyx-studio h2 {
+  text-align: center;
+  color: #bd72ff;
+  font-size: 32px;
+}
+#vortyx-studio .vx-sub {
+  text-align: center;
+  color: #aaa;
+  margin-bottom: 35px;
+}
+#vortyx-studio .vx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(230px,1fr));
+  gap: 18px;
+}
+#vortyx-studio .vx-card {
+  background: #171224;
+  border: 1px solid #7135a5;
+  border-radius: 16px;
+  padding: 24px;
+}
+#vortyx-studio .vx-card h3 {
+  color: #d59aff;
+}
+#vortyx-studio input,
+#vortyx-studio textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  margin: 9px 0;
+  background: #090711;
+  border: 1px solid #7541a0;
+  border-radius: 8px;
+  color: white;
+}
+#vortyx-studio button {
+  background: linear-gradient(90deg,#7124b5,#bd55ff);
+  color: white;
+  border: 0;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+#vortyx-studio .vx-status {
+  color: #d59aff;
+  font-size: 13px;
+}
+</style>
+
+<section id="vortyx-studio">
+<div class="vx-wrap">
+
+<h2>VORTYX AI CREATIVE STUDIO</h2>
+<p class="vx-sub">
+CREATE • EDIT • EVOLVE
+<br>YOUR AI CREATIVE WORLD
+</p>
+
+<div class="vx-grid">
+
+<div class="vx-card">
+<h3>🎬 TEXT TO VIDEO</h3>
+<p>Create videos from text descriptions.</p>
+<textarea id="vx-text-prompt"
+placeholder="Describe the video you want..."></textarea>
+<button onclick="vxPrepare('text')">
+CREATE VIDEO
+</button>
+</div>
+
+<div class="vx-card">
+<h3>🖼️ IMAGE TO VIDEO</h3>
+<p>Animate your images with AI.</p>
+<input type="file" id="vx-image-file"
+accept="image/*">
+<textarea id="vx-image-prompt"
+placeholder="Describe the animation..."></textarea>
+<button onclick="vxPrepare('image')">
+ANIMATE IMAGE
+</button>
+</div>
+
+<div class="vx-card">
+<h3>✂️ VIDEO TO CLIPS</h3>
+<p>Transform long videos into short clips.</p>
+<input type="file" id="vx-video-file"
+accept="video/*">
+<button onclick="vxPrepare('clips')">
+PREPARE CLIPS
+</button>
+</div>
+
+<div class="vx-card">
+<h3>🎨 AI IMAGE CREATOR</h3>
+<p>Create visual content for social media.</p>
+<textarea id="vx-art-prompt"
+placeholder="Describe your image..."></textarea>
+<button onclick="vxPrepare('art')">
+CREATE IMAGE
+</button>
+</div>
+
+<div class="vx-card">
+<h3>🎙️ AI VOICE STUDIO</h3>
+<p>Voiceovers and audio content.</p>
+<textarea id="vx-voice-prompt"
+placeholder="Write your voiceover text..."></textarea>
+<button onclick="vxPrepare('voice')">
+PREPARE VOICE
+</button>
+</div>
+
+<div class="vx-card">
+<h3>✍️ AI CONTENT ASSISTANT</h3>
+<p>Ideas, scripts, captions and hashtags.</p>
+<textarea id="vx-content-prompt"
+placeholder="What content do you need?"></textarea>
+<button onclick="vxPrepare('content')">
+CREATE CONTENT
+</button>
+</div>
+
+</div>
+
+<p id="vx-studio-status" class="vx-status">
+VORTYX AI STUDIO INITIALIZED
+</p>
+
+</div>
+</section>
+
+<script>
+function vxPrepare(type) {
+  const status = document.getElementById(
+    "vx-studio-status"
+  );
+
+  status.textContent =
+    "Project prepared: " + type.toUpperCase() +
+    ". AI engine integration pending.";
+}
+</script>
+<!-- END VORTYX AI CREATIVE STUDIO -->
+
 </body>
 </html>
 
